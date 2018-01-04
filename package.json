@@ -1,5 +1,5 @@
 {
-  "name": "shine",
+  "name": "btrain",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "bootstrap": "^3.3.7",
+    "jquery": "^3.2.1",
     "pixi.js": "^4.5.4",
     "typed.js": "^2.0.5"
   },
