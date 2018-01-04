@@ -1,0 +1,1 @@
+/c/Users/Michele/node_modules/.bin/electron electron.js

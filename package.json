@@ -1,0 +1,30 @@
+{
+  "name": "shine",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build": "babel src -d lib",
+    "wserve": "webpack-dev-server --content-base build/"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "pixi.js": "^4.5.4",
+    "typed.js": "^2.0.5"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-core": "^6.24.1",
+    "babel-loader": "^7.0.0",
+    "babel-preset-env": "^1.5.2",
+    "clean-webpack-plugin": "^0.1.16",
+    "css-loader": "^0.28.4",
+    "file-loader": "^0.11.2",
+    "style-loader": "^0.18.2",
+    "webpack": "^2.6.1",
+    "webpack-dev-server": "^2.4.5"
+  },
+  "description": ""
+}

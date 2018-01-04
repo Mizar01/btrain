@@ -1,0 +1,50 @@
+body {
+	background-color: black;
+}
+
+.acex {
+	display: none;
+}
+
+
+.acexHtmlWindow {
+	position: fixed;
+	z-index: 10;
+	width: 400px;
+	height: 300px;
+	background-color: #001100;
+	color: yellow;
+	border: 2px solid white;
+	border-radius: 10px;
+	padding: 20px;
+}
+
+.acexHtmlWindow h3 {
+	text-align: center;
+}
+
+.acexHtmlButton {
+	cursor: pointer;
+}
+
+.upgradeBox {
+	width: 20%;
+	height:25%;
+	background-color: black;
+	text-align: center;
+	border: 1px solid gray;
+}
+
+.questContainer {
+	border-bottom: 1px solid white;
+}
+
+#journalMenu_content {
+	height: 80%;
+	overflow-y: scroll;
+
+}
+
+.typed-cursor{
+	display: none;
+}

@@ -1,0 +1,24 @@
+{
+  "short_name": "btrain",
+  "name": "btrain",
+  "icons": [
+    {
+      "src": "icons/btrain-48.png",
+      "type": "image/png",
+      "sizes": "48x48"
+    },
+    {
+      "src": "icons/btrain-96.png",
+      "type": "image/png",
+      "sizes": "96x96"
+    },
+    {
+      "src": "icons/btrain-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    }
+  ],
+  "start_url": "index.html?launcher=true",
+  "display": "fullscreen",
+  "orientation": "landscape"
+}
