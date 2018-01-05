@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "build": "babel src -d lib",
-    "dev": "webpack-dev-server --content-base build/",
+    "dev": "webpack-dev-server",
     "start": "webpack & cp -a assets/* dist/ & node server.js"
   },
   "keywords": [],
