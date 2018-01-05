@@ -4,13 +4,15 @@
   "main": "index.js",
   "scripts": {
     "build": "babel src -d lib",
-    "start": "webpack-dev-server --content-base build/"
+    "dev": "webpack-dev-server --content-base build/",
+    "start": "webpack & cp -a assets/* dist/ & node server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "bootstrap": "^3.3.7",
+    "express": "^4.16.2",
     "jquery": "^3.2.1",
     "pixi.js": "^4.5.4",
     "typed.js": "^2.0.5"

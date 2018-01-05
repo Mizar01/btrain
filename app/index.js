@@ -1,4 +1,4 @@
-require('../dist/pixi');
+require('../dist/pixi.js');
 require('bootstrap');
 
 import '../css/bs/bootstrap_cyborg.min.css'
