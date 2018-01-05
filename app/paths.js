@@ -1,6 +1,7 @@
 require("./ACEX/ACEX.js");
 const Dot = require("./Dot").Dot
 const Trail = require("./Trail").Trail
+const Blip = require("./signals").Blip
 
 class Path extends ACEX.Actor {
 	
@@ -38,39 +39,71 @@ class Path extends ACEX.Actor {
 		o.square = sq
 
 		this.obj = o
-		this._addArrow()
 	}
 
-	_addArrow(arrowNum) {
+	// _addArrow(arrowNum) {
+	// 	let r = this.grid.res
+	// 	let arrow = new PIXI.Graphics()
+	// 	arrow.position = new PIXI.Point(r/2, r/2)
+
+	// 	let arrowMargin = r / 3
+	// 	let arrowThick = 2	
+	// 	let arrowDist = arrowThick * r/8
+	// 	let arrowLength = r / 5	
+	// 	arrowNum = arrowNum || 2
+	// 	let arrowLeftMargin = r / 4
+	// 	arrow.lineStyle(arrowThick, 0xffffff, 1)
+	// 	for (let ri = 0; ri < arrowNum; ri++) {
+	// 		let offset = ri * arrowDist
+	// 		if (arrowNum == 1) {
+	// 			offset = arrowDist
+	// 		}
+	// 		arrow.moveTo(-r/2 + offset + arrowLeftMargin, -r/2 + arrowMargin)
+	// 		arrow.lineTo(-r/2 + arrowLeftMargin + arrowLength + offset, 0)
+	// 			.lineTo(-r/2 + offset + arrowLeftMargin,  r/2 - arrowMargin)
+	// 	}
+	// 	arrow.tint = this.arrowTint
+	// 	this.obj.addChild(arrow)
+	// 	this.obj.arrow = arrow
+	// 	this._rotateArrow()
+	// }
+
+	_drawPath() {
+
+		// The path must be a direct gameLayer child (above all other path drawings)
+
+		if(this.obj.arrow != null) {
+			this.obj.arrow.clear()
+		} 
 		let r = this.grid.res
-		let arrow = new PIXI.Graphics()
-		arrow.position = new PIXI.Point(r/2, r/2)
+		let p = this.getCenteredPosition()
+		let thick = 5
+		let a = new PIXI.Graphics()
+		a.position = new PIXI.Point(p.x, p.y)
 
-		let arrowMargin = r / 3
-		let arrowThick = 2	
-		let arrowDist = arrowThick * r/8
-		let arrowLength = r / 5	
-		arrowNum = arrowNum || 2
-		let arrowLeftMargin = r / 4
-		arrow.lineStyle(arrowThick, 0xffffff, 1)
-		for (let ri = 0; ri < arrowNum; ri++) {
-			let offset = ri * arrowDist
-			if (arrowNum == 1) {
-				offset = arrowDist
-			}
-			arrow.moveTo(-r/2 + offset + arrowLeftMargin, -r/2 + arrowMargin)
-			arrow.lineTo(-r/2 + arrowLeftMargin + arrowLength + offset, 0)
-				.lineTo(-r/2 + offset + arrowLeftMargin,  r/2 - arrowMargin)
+		a.lineStyle(thick, 0xffffff, 1)
+		a.moveTo(0, 0)
+		
+		let nPath = this.getNext()
+		let np = nPath.getCenteredPosition()
+		if (nPath.constructor.name == "House") {
+			// draw the same line but stops at half length
+			let ang = ACEX.Utils.angleToPoint(p, np)
+			a.lineTo(r/2 * Math.cos(ang), r/2 * Math.sin(ang))	
+		} else {
+			a.lineTo(np.x - p.x, np.y - p.y)
 		}
-		arrow.tint = this.arrowTint
-		this.obj.addChild(arrow)
-		this.obj.arrow = arrow
-		this._rotateArrow()
+
+		a.beginFill(0xffffff)
+		a.drawCircle(0, 0, r/15)
+		a.endFill()
+		this.grid.game.gameLayer.obj.addChild(a)  // direct object child of gameLayer
+		this.obj.arrow = a
 	}
 
-	_rotateArrow() {
-		this.obj.arrow.rotation = Math.PI / 2 * "rblt".indexOf(this.direction)
-	}
+	// _rotateArrow() {
+	// 	this.obj.arrow.rotation = Math.PI / 2 * "rblt".indexOf(this.direction)
+	// }
 
 	// rotateSwitch() {
 	// 	console.log(this)
@@ -81,7 +114,9 @@ class Path extends ACEX.Actor {
 	// 	}
 	// }
 
+	// This must be called after every path has been initialized
 	setup() {
+		this._drawPath()
 	}
 
 	toggle() {}
@@ -91,7 +126,7 @@ class Path extends ACEX.Actor {
 	}
 
 	mark() {
-		this.obj.square.alpha = 0.4
+		this.obj.square.alpha = 0.0
 		this.obj.square.graphicsData[0].fillColor = this.markColor
 	}
 
@@ -102,6 +137,13 @@ class Path extends ACEX.Actor {
 
 	getNext() {
 		return this.grid.getNext(this)
+	}
+
+	getNextPathCenteredPosition() {
+		let np = this.getNext()
+		if (np != null) {
+			return np.getCenteredPosition()
+		}
 	}
 
 	startHilight() {
@@ -149,9 +191,11 @@ class Path extends ACEX.Actor {
 class Generator extends Path {
 	constructor(x, y, code, grid) {
 		super(x, y, code, grid)
-		this.genTimer = new ACEX.CooldownTimer(2, true)
+		this.genTimer = new ACEX.CooldownTimer(10, true)
 		// Adding initial random time(without initial cooldown)
-		this.genTimer.time = ACEX.Utils.randInt(0, 15)
+		this.genTimer.time = ACEX.Utils.randInt(0, 2)
+
+		this.blipTimer = new ACEX.CooldownTimer(2, true)
 	}
 
 	setup() {
@@ -176,7 +220,7 @@ class Generator extends Path {
 	redraw() {
 		let r = this.grid.res
 		let o = new PIXI.Graphics()
-		let margin = 0
+		let margin = - r / 4
 
 		let sq = new PIXI.Graphics() 
 		sq.position = new PIXI.Point(r/2, r/2)
@@ -201,8 +245,25 @@ class Generator extends Path {
 					this.grid.game
 				)
 			)
+			this.generateBlip(50, ACEX.Utils.getHexColor(colorCode))
 		}
+
+		if (this.blipTimer.trigger()) {
+			this.generateBlip(30, 0xAAAAAA)
+		}
+
 		this.obj.children[0].rotation = Date.now() * 0.001
+	}
+
+	generateBlip(radius, color) {
+		this.grid.game.gameLayer.addChild(
+			new Blip(
+				radius,
+				this.getCenteredPosition(), 
+				color, 
+				this.game
+			)
+		)
 	}
 
 
@@ -233,6 +294,8 @@ class House extends Path {
 		this.obj = o
 	}
 
+	setup() {}
+
 
 
 }
@@ -246,6 +309,7 @@ class Switch extends Path {
 		this.dirIndex = 0
 		this.to = []
 		this.from = null
+		this.arrowTint = 0xaaaaaa
 
 	}
 
@@ -257,9 +321,9 @@ class Switch extends Path {
 		let sq = new PIXI.Graphics() 
 		sq.position = new PIXI.Point(r/2, r/2)
 		console.log("sjk")
-		sq.beginFill(0xff00ff)
+		sq.beginFill(0xfff0ff)
 		// sq.drawRect(-r/2 - margin, -r/2 - margin, r + margin * 2, r + margin * 2)
-		sq.drawCircle(0, 0, r/2 - 2)
+		sq.drawCircle(0, 0, r/4 - 2)
 		sq.endFill()
 		o.addChild(sq)
 		o.square = sq
@@ -278,7 +342,7 @@ class Switch extends Path {
 		// this.mark()
 		this.to[this.dirIndex].path.mark()
 
-		this._addArrow(1)
+		this._drawPath()
 
 	}
 
@@ -295,7 +359,8 @@ class Switch extends Path {
 		this.dirIndex = (this.dirIndex + 1) % this.to.length
 		this.direction = this.to[this.dirIndex].direction
 		this.to[this.dirIndex].path.mark()
-		this._rotateArrow()
+		// this._rotateArrow()
+		this._drawPath()
 	}
 
 	_detectWays() {

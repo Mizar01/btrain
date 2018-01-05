@@ -66,10 +66,14 @@ Utils = {
 
 	getHexColor: function(colorCode) {
 
-		if (colorCode == "red") return 0xff0000;
-		if (colorCode == "green") return 0x00ff00;
-		if (colorCode == "blue") return 0x0000ff;
-		if (colorCode == "purple") return 0xff00ff;
+		let c = colorCode.toLowerCase()
+
+		let isIn = (code, arr) => arr.findIndex( v => v == code ) != -1
+
+		if (isIn(c, ["red", "r"] )) return 0xff0000;
+		if (isIn(c, ["green", "g"] )) return 0x00ff00;
+		if (isIn(c, ["blue", "b"] )) return 0x0000ff;
+		if (isIn(c, ["purple", "p"] )) return 0xff00ff;
 
 	},
 
