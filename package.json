@@ -5,7 +5,7 @@
   "scripts": {
     "build": "babel src -d lib",
     "dev": "webpack-dev-server",
-    "start": "webpack & cp -a assets/* dist/ & node server.js"
+    "start": "mkdir dist & webpack & cp -a assets/* dist/ & node server.js"
   },
   "keywords": [],
   "author": "",
