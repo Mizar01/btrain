@@ -1,5 +1,6 @@
 require("./ACEX/ACEX.js");
 const Dot = require("./Dot").Dot
+const Death = require("./Dot").Death
 const Trail = require("./Trail").Trail
 const Blip = require("./signals").Blip
 
@@ -237,8 +238,14 @@ class Generator extends Path {
 			let grid = this.grid
 			let colors = grid.availColors
 			let colorCode = colors[ACEX.Utils.randInt(0, colors.length - 1)]
+
+
+			//1 every N is a death obj
+			let prob = 50  // perc.%
+			let objType = (ACEX.Utils.randInt(0, 99) < prob) ? Death : Dot
+
 			this.grid.game.gameLayer.addChild(
-				new Dot(
+				new objType(
 					this.logicPosition.x, 
 					this.logicPosition.y, 
 					colorCode, 
@@ -320,7 +327,6 @@ class Switch extends Path {
 
 		let sq = new PIXI.Graphics() 
 		sq.position = new PIXI.Point(r/2, r/2)
-		console.log("sjk")
 		sq.beginFill(0xfff0ff)
 		// sq.drawRect(-r/2 - margin, -r/2 - margin, r + margin * 2, r + margin * 2)
 		sq.drawCircle(0, 0, r/4 - 2)

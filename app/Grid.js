@@ -17,7 +17,6 @@ class Grid extends ACEX.Actor {
 		this.w = getAcex().sw - 1
 		this.h = getAcex().sh - 1
 		this.res = Math.min ((this.w - 1) / gridX, (this.h - 1) / gridY)
-		console.log(this.res) 
 		this.obj = new PIXI.Graphics()
 		this.redraw()
 
@@ -30,7 +29,6 @@ class Grid extends ACEX.Actor {
 	}
 
 	setup(pathConfig) {
-		console.log(pathConfig)
 		//Adding map of paths and switches
 		for (let x=0; x < pathConfig.length; x++) {
 			for(let y = 0; y < pathConfig[0].length; y++) {

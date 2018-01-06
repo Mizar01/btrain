@@ -18,6 +18,9 @@ const TargetCursor = require("./TargetCursor").TargetCursor
 
 // import impactFontUrl from '../resources/impact.fnt';
 import optionsPngUrl from '../resources/options.png';
+import deathPngUrl from '../resources/death.png';
+import dotPngUrl from '../resources/dot.png';
+
 
 
 class Game {
@@ -135,6 +138,8 @@ function init() {
 	let assets = [
 		// {name: 'impactFont', url : impactFontUrl },
 		{name: 'optionsPng', url : optionsPngUrl },
+		{name: 'deathPng',   url : deathPngUrl },
+		{name: 'dotPng',     url : dotPngUrl },
 	]
 	// new ACEX(1002, 702, assets, define_game)
 	new ACEX(pixiW, pixiH, assets, define_game)

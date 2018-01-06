@@ -6,7 +6,6 @@ class Trail extends ACEX.Actor {
 	
 	constructor(x, y, game) {
 		super()
-		console.log(this.obj)
 		this.game = game
 		this.nextMoveTimer = new ACEX.CooldownTimer(0.25, true)
 		this.initialPosition = {x: x, y: y}
