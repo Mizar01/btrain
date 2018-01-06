@@ -17,7 +17,7 @@ class Trail extends ACEX.Actor {
 		let lp = this.logicPosition
 		let grid = this.game.vars.grid
 		let currentPath = grid.paths[lp.x][lp.y]
-		if (currentPath.constructor.name == "House") {
+		if (currentPath.isHouse) {
 			this.logicPosition = this.initialPosition;
 			return
 		}

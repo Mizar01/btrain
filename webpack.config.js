@@ -1,6 +1,9 @@
 var webpack = require("webpack");
 
 var path = require("path");
+var UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+
+
 module.exports = {
   entry: {
     app: ["./app/index.js"]
@@ -38,6 +41,7 @@ module.exports = {
     ]
   },
    plugins: [
+    new UglifyJSPlugin(),
     new webpack.ProvidePlugin({
       $: "jquery",
       jQuery: "jquery"

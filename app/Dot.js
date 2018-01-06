@@ -85,7 +85,7 @@ class Dot extends ACEX.Actor {
 		let grid = this.game.vars.grid
 		let currentPath = grid.paths[lp.x][lp.y]
 
-		if (currentPath.constructor.name == "House") {
+		if (currentPath.isHouse) {
 			this.setScore(this.evalPoints(currentPath))
 			this.stop = true
 			this.setForRemoval()

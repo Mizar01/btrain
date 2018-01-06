@@ -87,7 +87,7 @@ class Path extends ACEX.Actor {
 		
 		let nPath = this.getNext()
 		let np = nPath.getCenteredPosition()
-		if (nPath.constructor.name == "House") {
+		if (nPath.isHouse) {
 			// draw the same line but stops at half length
 			let ang = ACEX.Utils.angleToPoint(p, np)
 			a.lineTo(r/2 * Math.cos(ang), r/2 * Math.sin(ang))	
@@ -280,6 +280,7 @@ class House extends Path {
 
 	constructor(x, y, pathCode, grid) {
 		super(x, y, pathCode, grid)
+		this.isHouse = true   // allow to avoid constructor.name (it conflicts with uglifyJs)
 	}
 
 

@@ -92,6 +92,8 @@ Utils = {
 			return [-1, 0]
 		}
 
+		return null
+
 	},
 }
 
