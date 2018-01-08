@@ -3,6 +3,24 @@ var webpack = require("webpack");
 var path = require("path");
 var UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
+const isProduction = process.env.NODE_ENV == 'production';
+
+console.log("NODE_ENV", process.env.NODE_ENV)
+
+const plugins = []
+// Common plugins
+plugins.push(
+  new webpack.ProvidePlugin({
+    $: "jquery",
+    jQuery: "jquery"
+  })  
+)
+// Production only plugins
+if (isProduction) {
+  plugins.push(new UglifyJSPlugin())
+}
+
+
 
 module.exports = {
   entry: {
@@ -40,13 +58,7 @@ module.exports = {
       }
     ]
   },
-   plugins: [
-    new UglifyJSPlugin(),
-    new webpack.ProvidePlugin({
-      $: "jquery",
-      jQuery: "jquery"
-    })
-  ]
+  plugins: plugins
 
 
 };

@@ -42,64 +42,44 @@ class Path extends ACEX.Actor {
 		this.obj = o
 	}
 
-	// _addArrow(arrowNum) {
-	// 	let r = this.grid.res
-	// 	let arrow = new PIXI.Graphics()
-	// 	arrow.position = new PIXI.Point(r/2, r/2)
-
-	// 	let arrowMargin = r / 3
-	// 	let arrowThick = 2	
-	// 	let arrowDist = arrowThick * r/8
-	// 	let arrowLength = r / 5	
-	// 	arrowNum = arrowNum || 2
-	// 	let arrowLeftMargin = r / 4
-	// 	arrow.lineStyle(arrowThick, 0xffffff, 1)
-	// 	for (let ri = 0; ri < arrowNum; ri++) {
-	// 		let offset = ri * arrowDist
-	// 		if (arrowNum == 1) {
-	// 			offset = arrowDist
-	// 		}
-	// 		arrow.moveTo(-r/2 + offset + arrowLeftMargin, -r/2 + arrowMargin)
-	// 		arrow.lineTo(-r/2 + arrowLeftMargin + arrowLength + offset, 0)
-	// 			.lineTo(-r/2 + offset + arrowLeftMargin,  r/2 - arrowMargin)
-	// 	}
-	// 	arrow.tint = this.arrowTint
-	// 	this.obj.addChild(arrow)
-	// 	this.obj.arrow = arrow
-	// 	this._rotateArrow()
-	// }
-
 	_drawPath() {
 
 		// The path must be a direct gameLayer child (above all other path drawings)
-
-		if(this.obj.arrow != null) {
-			this.obj.arrow.clear()
-		} 
 		let r = this.grid.res
-		let p = this.getCenteredPosition()
+		let circleSize = r/15
 		let thick = 5
-		let a = new PIXI.Graphics()
-		a.position = new PIXI.Point(p.x, p.y)
+
+		let a = this.obj.arrow
+		if(a != null) {
+			a.clear()
+		}else {
+			a = new PIXI.Graphics()
+			a.position = new PIXI.Point(r/2, r/2)
+			//this.grid.game.gameLayer.obj.addChild(a)  // direct object child of gameLayer
+			this.obj.addChild(a)
+			this.obj.arrow = a
+		}
+
+		let p = this.getCenteredPosition()
 
 		a.lineStyle(thick, 0xffffff, 1)
-		a.moveTo(0, 0)
 		
 		let nPath = this.getNext()
 		let np = nPath.getCenteredPosition()
+
+		let ang = ACEX.Utils.angleToPoint(p, np)
+		let startLinePoint = ACEX.Utils.polarToCart(circleSize, ang)
+		let endLinePoint = ACEX.Utils.polarToCart(r - circleSize, ang)
 		if (nPath.isHouse) {
 			// draw the same line but stops at half length
-			let ang = ACEX.Utils.angleToPoint(p, np)
-			a.lineTo(r/2 * Math.cos(ang), r/2 * Math.sin(ang))	
-		} else {
-			a.lineTo(np.x - p.x, np.y - p.y)
+			endLinePoint = ACEX.Utils.polarToCart(r/2, ang)
 		}
-
+		a.moveTo(startLinePoint.x , startLinePoint.y)
+		a.lineTo(endLinePoint.x, endLinePoint.y)	
+		
 		a.beginFill(0xffffff)
-		a.drawCircle(0, 0, r/15)
+		a.drawCircle(0, 0, circleSize)
 		a.endFill()
-		this.grid.game.gameLayer.obj.addChild(a)  // direct object child of gameLayer
-		this.obj.arrow = a
 	}
 
 	// _rotateArrow() {
