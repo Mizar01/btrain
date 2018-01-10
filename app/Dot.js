@@ -11,12 +11,11 @@ class Dot extends ACEX.Actor {
 		this.game = game
 		this.obj = null
 		this.colorCode = colorCode
-		this.logicPosition = {x: x, y: y}
 
 		this.size = this.game.vars.grid.res * 0.9 // can be ovverridden by draw method
 		this.draw(this.colorCode)
 
-		this.setPosition(this.game.vars.grid.cellToGrid(this.logicPosition, true))
+		this.setPosition(this.game.vars.grid.cellToGrid({x: x, y: y}, true))
 	
 		this.nextMoveTimer = new ACEX.CooldownTimer(0.75, true)	
 
@@ -25,6 +24,8 @@ class Dot extends ACEX.Actor {
 		this.moveTimer = new ACEX.CooldownTimer(1/this.speed, true)
 		
 		this.stop = false
+
+		this.targetPath = null
 
 
 	}
@@ -63,40 +64,56 @@ class Dot extends ACEX.Actor {
 
 	move() {
 
-		let tp = this.targetPosition
-		if (tp == null) {
+		if (this.targetPath == null) {
 			this.setNewTarget()
 			return
 		}
 
-		if (ACEX.Utils.pointDistance(this.obj.position, tp) < 8 ) {
+		// Check if a switch has been set differently during the walk on it
+		// and change the targetPath accordingly on the fly.
+		let cp = this.getRealCurrentPath()
+		if (cp.isSwitch && cp != this.targetPath) {
+			let switchNext = cp.getNext()
+			if (switchNext != this.targetPath) {
+				this.targetPath = switchNext 
+			}
+		}
+
+		let tpPos = this.targetPath.centerPosition
+		if (ACEX.Utils.pointDistance(this.obj.position, tpPos) < 8 ) {
 			//this.setPosition(tp)
 			this.setNewTarget()
-		} 
-			
-		let angle = ACEX.Utils.angleToPoint(this.obj.position, tp)
-		this.followPoint(this.targetPosition, this.speed, false)
+		}
+		this.followPoint(tpPos, this.speed, false)
 
 	}
 
 	setNewTarget() {
 
-		let lp = this.logicPosition
-		let grid = this.game.vars.grid
-		let currentPath = grid.paths[lp.x][lp.y]
+		// let lp = this.logicPosition
+		// let grid = this.game.vars.grid
+		// let currentPath = grid.paths[lp.x][lp.y]
 
-		if (currentPath.isHouse) {
-			this.setScore(this.evalPoints(currentPath))
+		let cPath = this.getRealCurrentPath()
+
+		if (cPath.isHouse) {
+			this.setScore(this.evalPoints(cPath))
 			this.stop = true
 			this.setForRemoval()
 			return
 		}
- 
-		let dir = currentPath.getDirection()
-		let np = {x: lp.x + dir[0], y: lp.y + dir[1]}
-		this.logicPosition = np
-		this.targetPosition = this.game.vars.grid.cellToGrid(np, true)
 
+		let nPath = cPath.getNext()
+		this.targetPath = nPath
+
+	}
+
+	/**
+	* Get the real cell grid based on position
+	*/
+	getRealCurrentPath() {
+		let tp = this.obj.position
+		return this.game.vars.grid.getPathByPos(tp.x, tp.y)
 	}
 
 	evalPoints(currentPath) {

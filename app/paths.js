@@ -17,6 +17,7 @@ class Path extends ACEX.Actor {
 		// this.baseColor = 0x999999
 		this.arrowTint = 0x444444
 		this.hlIteration = null
+		this.pathWidth = 5
 		// this.arrowHLTint = this.arrowTint
 
 		this.markColor = 0xffff00
@@ -24,6 +25,7 @@ class Path extends ACEX.Actor {
 
 		this.redraw()
 		this.setPosition(grid.cellToGrid(this.logicPosition))
+		this.centerPosition = this.getCenteredPosition()
 	}
 
 	redraw() {
@@ -47,7 +49,7 @@ class Path extends ACEX.Actor {
 		// The path must be a direct gameLayer child (above all other path drawings)
 		let r = this.grid.res
 		let circleSize = r/15
-		let thick = 5
+		let thick = this.pathWidth
 
 		let a = this.obj.arrow
 		if(a != null) {
@@ -298,6 +300,8 @@ class Switch extends Path {
 		this.to = []
 		this.from = null
 		this.arrowTint = 0xaaaaaa
+		this.pathWidth *= 1.5
+		this.isSwitch = true
 
 	}
 
@@ -308,8 +312,10 @@ class Switch extends Path {
 
 		let sq = new PIXI.Graphics() 
 		sq.position = new PIXI.Point(r/2, r/2)
+		sq.beginFill(0xff00ff)
+		sq.drawCircle(0, 0, r/3 - 2)
+		sq.endFill()
 		sq.beginFill(0xfff0ff)
-		// sq.drawRect(-r/2 - margin, -r/2 - margin, r + margin * 2, r + margin * 2)
 		sq.drawCircle(0, 0, r/4 - 2)
 		sq.endFill()
 		o.addChild(sq)

@@ -1,5 +1,9 @@
 body {
 	background-color: black;
+	margin-left: 20px;
+	margin-right: 20px;
+	margin-top: 5px;
+	margin-bottom: 1px;
 }
 
 .acex {
@@ -25,24 +29,6 @@ body {
 
 .acexHtmlButton {
 	cursor: pointer;
-}
-
-.upgradeBox {
-	width: 20%;
-	height:25%;
-	background-color: black;
-	text-align: center;
-	border: 1px solid gray;
-}
-
-.questContainer {
-	border-bottom: 1px solid white;
-}
-
-#journalMenu_content {
-	height: 80%;
-	overflow-y: scroll;
-
 }
 
 .typed-cursor{

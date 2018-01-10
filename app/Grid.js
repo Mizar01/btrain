@@ -99,6 +99,11 @@ class Grid extends ACEX.Actor {
 		}
 	}
 
+	getPathByPos(x, y) {
+		let gp = this.gridToCell({x: x, y: y})
+		return this.getPath(gp.x, gp.y)
+	}
+
 	getNext(path) {
 		let d = ACEX.Utils.dirCoord(path.direction)
 		let np = {x: path.logicPosition.x + d[0], y: path.logicPosition.y + d[1]}
